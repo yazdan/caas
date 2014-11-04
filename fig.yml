@@ -1,0 +1,47 @@
+web:
+        build: ./nginx-fpm-drupal
+        volumes:
+                - ./drupal-7.32:/usr/share/nginx/html
+                - ./logs:/var/log
+        ports:
+                - "8000:80"
+        links:
+                - db
+        environment:
+                - DRUPAL_DB_NAME=test
+                - DRUPAL_DB_USER=root
+                - DRUPAL_DB_PASS=
+                - DRUPAL_DB_HOST=db
+                - DRUPAL_DB_PORT=3306
+darya:
+        build: ./nginx-fpm-drupal
+        volumes:
+                - ./sites/daryaa.org/code:/usr/share/nginx/html
+                - ./logs:/var/log
+        ports:
+                - "8001:80"
+        links:
+                - db
+        environment:
+                - DRUPAL_DB_NAME=test
+                - DRUPAL_DB_USER=root
+                - DRUPAL_DB_PASS=
+                - DRUPAL_DB_HOST=db
+                - DRUPAL_DB_PORT=3306
+db:
+        build: ./database
+
+drush:
+        build: ./drush
+        volumes:
+                - ./drupal-7.32:/code
+                - ./sites/daryaa.org/:/daryaa
+        links:
+                - db
+        environment:
+                - DRUPAL_DB_NAME=test
+                - DRUPAL_DB_USER=root
+                - DRUPAL_DB_PASS=
+                - DRUPAL_DB_HOST=db
+                - DRUPAL_DB_PORT=3306
+
